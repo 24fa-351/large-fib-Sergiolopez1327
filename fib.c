@@ -2,39 +2,39 @@
 #include <stdlib.h>
 #include <string.h>
 
-unsigned long long fib_iterative(unsigned long long num) {
-    if (num <= 2) {
-        return num - 1;
+unsigned long long fib_iterative(unsigned long long fibIndex) {
+    if (fibIndex <= 2) {
+        return fibIndex - 1;
     }
 
-    unsigned long long previous_num = 0;
-    unsigned long long current_num = 1;
-    unsigned long long next_num;
+    unsigned long long previous = 0;
+    unsigned long long current = 1;
 
-    for (unsigned long long iter = 3; iter <= num; iter++) {
-        next_num = previous_num + current_num;
-        previous_num = current_num;
-        current_num = next_num;
+    for (unsigned long long iter = 3; iter <= fibIndex; iter++) {
+        unsigned long long next;
+        next = previous + current;
+        previous = current;
+        current = next;
     }
 
-    return current_num;
+    return current;
 }
 
-unsigned long long fib_recursive(unsigned long long num) {
-    if (num <= 2) {
-        return num - 1;
+unsigned long long fib_recursive(unsigned long long fibIndex) {
+    if (fibIndex <= 2) {
+        return fibIndex - 1;
     }
 
-    return fib_recursive(num - 1) + fib_recursive(num - 2);
+    return fib_recursive(fibIndex - 1) + fib_recursive(fibIndex - 2);
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     if (argc != 3) {
         fprintf(stderr, "Usage: %s <integer> <method>\n", argv[0]);
         return 1;
     }
 
-    unsigned long long input_number = strtoull(argv[1], NULL, 10);
+    unsigned long long input_number = atoi(argv[1]);
     char fib_method = argv[2][0];
 
     unsigned long long result;
@@ -43,7 +43,9 @@ int main(int argc, char *argv[]) {
     } else if (fib_method == 'r') {
         result = fib_recursive(input_number);
     } else {
-        fprintf(stderr, "Invalid method. Use 'i' for iterative or 'r' for recursive.\n");
+        fprintf(
+            stderr,
+            "Invalid method. Use 'i' for iterative or 'r' for recursive.\n");
         return 1;
     }
 
