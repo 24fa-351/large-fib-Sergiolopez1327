@@ -1,7 +1,13 @@
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#define MAX_FIB_VALUE ULLONG_MAX
+
+int fibOverflow(unsigned long long a, unsigned long long b) {
+    return (a > (ULLONG_MAX - b));
+}
 unsigned long long fib_iterative(unsigned long long fibIndex) {
     if (fibIndex <= 2) {
         return fibIndex - 1;
@@ -12,6 +18,10 @@ unsigned long long fib_iterative(unsigned long long fibIndex) {
 
     for (unsigned long long iter = 3; iter <= fibIndex; iter++) {
         unsigned long long next;
+        if (fibOverflow(previous, current)) {
+            fprintf(stderr, "Overflow detected at index %llu\n", iter + 2);
+            return -1;
+        }
         next = previous + current;
         previous = current;
         current = next;
@@ -24,8 +34,14 @@ unsigned long long fib_recursive(unsigned long long fibIndex) {
     if (fibIndex <= 2) {
         return fibIndex - 1;
     }
+    unsigned long long firstfibvalue = fib_recursive(fibIndex - 1);
+    unsigned long long secondfibvalue = fib_recursive(fibIndex - 2);
+    if (fibOverflow(firstfibvalue, secondfibvalue)) {
+        fprintf(stderr, "Overflow detected at index %llu\n", fibIndex);
+        return -1;
+    }
 
-    return fib_recursive(fibIndex - 1) + fib_recursive(fibIndex - 2);
+    return firstfibvalue + secondfibvalue;
 }
 
 int main(int argc, char* argv[]) {
